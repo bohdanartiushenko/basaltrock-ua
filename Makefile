@@ -1,4 +1,6 @@
-BASALTROCK ?= ../basaltrock
+BASALTROCK_GH ?= bohdanartiushenko/basaltrock
+BASALTROCK_VERSION ?= $(shell curl -fsSL https://api.github.com/repos/$(BASALTROCK_GH)/releases/latest | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p')
+BASALTROCK ?= .basaltrock/$(BASALTROCK_VERSION)
 DOCKER_DIR = $(BASALTROCK)/src/main/resources/opensearch/docker
 DATA_FOLDER ?= data
 DOC_ANSI_CODEPAGE ?= cp1251
@@ -15,9 +17,16 @@ export MODEL_RUNNER_LLM_CHAT
 export MODEL_RUNNER_LLM_EMBEDDING
 export MODEL_RUNNER_BASE_URL
 
-.PHONY: up down restart ingest rtf2txt tune-models logs status prune help
+.PHONY: up down restart ingest rtf2txt tune-models logs status prune help fetch
 
-up: tune-models
+$(DOCKER_DIR)/docker-compose.yml:
+	@echo "Downloading basaltrock $(BASALTROCK_VERSION) from github.com/$(BASALTROCK_GH)"
+	@mkdir -p $(BASALTROCK)
+	@curl -fsSL https://github.com/$(BASALTROCK_GH)/archive/refs/tags/$(BASALTROCK_VERSION).tar.gz | tar xz -C $(BASALTROCK) --strip-components=1
+
+fetch: $(DOCKER_DIR)/docker-compose.yml
+
+up: fetch tune-models
 	$(COMPOSE) up -d --build
 	@echo "Waiting for API..."
 	@until curl -sf -X POST http://localhost:80/model/health/count-tokens -H "Content-Type: application/json" -d '{"input":{}}' >/dev/null 2>&1; do sleep 2; done
@@ -47,7 +56,8 @@ prune: down
 	docker volume ls --filter "name=basaltrock-ua" -q | xargs -r docker volume rm
 
 help:
-	@echo "make up        - Start Ukrainian KB stack (ingest + API on :80)"
+	@echo "make up        - Download basaltrock + start Ukrainian KB stack on :80"
+	@echo "make fetch     - Download basaltrock $(BASALTROCK_VERSION) only"
 	@echo "make down      - Stop"
 	@echo "make ingest    - Re-run ingestion over $(DATA_FOLDER)"
 	@echo "make rtf2txt   - Convert .rtf in $(DATA_FOLDER) to .txt (macOS textutil)"
