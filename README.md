@@ -1,5 +1,7 @@
 # basaltrock-ua
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Україномовна локальна база знань (з ШІ) на основі [basaltrock](https://github.com/bohdanartiushenko/basaltrock).
 
 Повністю працює локально: документи не покидають вашу машину. Потрібні лише Docker та `make`.

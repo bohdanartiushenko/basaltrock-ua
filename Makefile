@@ -1,3 +1,10 @@
+# -----------------------------------------------------------------------------
+# Copyright (c) 2025-2026 Bohdan Artiushenko https://github.com/bohdanartiushenko
+# Home: https://github.com/bohdanartiushenko/basaltrock-ua
+# Licensed under the MIT License. See LICENSE file in the project root.
+# SPDX-License-Identifier: MIT
+# -----------------------------------------------------------------------------
+
 BASALTROCK_GH ?= bohdanartiushenko/basaltrock
 BASALTROCK_VERSION ?= $(shell curl -fsSL https://api.github.com/repos/$(BASALTROCK_GH)/releases/latest | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p')
 BASALTROCK ?= .basaltrock/$(BASALTROCK_VERSION)
