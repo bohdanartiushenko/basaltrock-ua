@@ -11,7 +11,7 @@ BASALTROCK ?= .basaltrock/$(BASALTROCK_VERSION)
 DOCKER_DIR = $(BASALTROCK)/src/main/resources/opensearch/docker
 DATA_FOLDER ?= data
 DOC_ANSI_CODEPAGE ?= cp1251
-MODEL_RUNNER_LLM_CHAT ?= ai/gemma4:e2b-safetensors
+MODEL_RUNNER_LLM_CHAT ?= ai/gemma4:e2b-q4_K_M
 MODEL_RUNNER_LLM_EMBEDDING ?= ai/nomic-embed-text-v2-moe
 MODEL_KEEP_ALIVE ?= -1
 MODEL_CONTEXT_SIZE ?= 32768
@@ -35,7 +35,7 @@ $(DOCKER_DIR)/docker-compose.yml:
 
 fetch: $(DOCKER_DIR)/docker-compose.yml
 
-up: fetch tune-models
+up: fetch
 	$(COMPOSE) up -d --build
 	@echo "Waiting for API..."
 	@until curl -sf -X POST http://localhost:80/model/health/count-tokens -H "Content-Type: application/json" -d '{"input":{}}' >/dev/null 2>&1; do sleep 2; done
