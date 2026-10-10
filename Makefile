@@ -19,6 +19,7 @@ MODEL_CONTEXT_SIZE ?= 32768
 COMPOSE = docker compose -f $(DOCKER_DIR)/docker-compose.yml -f docker-compose.ua.yml
 
 export DATA_FOLDER_PATH = $(abspath $(DATA_FOLDER))
+export INDEX_HTML_PATH = $(abspath index.ua.html)
 export DOC_ANSI_CODEPAGE
 export MODEL_RUNNER_LLM_CHAT
 export MODEL_RUNNER_LLM_EMBEDDING
@@ -30,6 +31,7 @@ $(DOCKER_DIR)/docker-compose.yml:
 	@echo "Downloading basaltrock $(BASALTROCK_VERSION) from github.com/$(BASALTROCK_GH)"
 	@mkdir -p $(BASALTROCK)
 	@curl -fsSL https://github.com/$(BASALTROCK_GH)/archive/refs/tags/$(BASALTROCK_VERSION).tar.gz | tar xz -C $(BASALTROCK) --strip-components=1
+	@mkdir -p $(DOCKER_DIR)/data
 
 fetch: $(DOCKER_DIR)/docker-compose.yml
 
