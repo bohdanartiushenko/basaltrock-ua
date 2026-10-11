@@ -1,6 +1,9 @@
 # basaltrock-ua
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Docker 4.40+](https://img.shields.io/badge/Docker-4.40%2B%20(Model%20Runner)-blue?logo=docker)](https://www.docker.com/)
+[![Bash](https://img.shields.io/badge/Bash-scripts-orange?logo=gnubash)](src/main/bash/)
+[![Make](https://img.shields.io/badge/Make-build%20tool-orange?logo=gnu)](Makefile)
 
 Україномовна база знань з ШІ. Складіть свої документи в одну теку — і запитуйте їх звичайною мовою.
 
