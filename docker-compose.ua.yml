@@ -1,12 +1,19 @@
 name: basaltrock-ua
 
 services:
+  opensearch:
+    volumes:
+      - opensearch_data:/usr/share/opensearch/data
+
   api:
     environment:
-      RAG_SYSTEM_PROMPT_TEMPLATE: "Ти — помічник з нормативних документів. Відповідай українською мовою. Відповідай на основі наведеного контексту з бази знань. Цитуй номери наказів, пунктів і статей там, де вони є в контексті. Якщо в контексті немає потрібної інформації, скажи, що даних недостатньо, і не вигадуй. Перевіряй відповідь на грамотність. \n\nКонтекст:\n{context}"
+      RAG_SYSTEM_PROMPT_TEMPLATE: ${RAG_SYSTEM_PROMPT_TEMPLATE:-}
     volumes:
-      - ${INDEX_HTML_PATH}:/app/index.html:ro
+      - ${INDEX_HTML_PATH:-${PWD}/index.ua.html}:/app/index.html:ro
+
+volumes:
+  opensearch_data:
 
 models:
   chat-model:
-    model: ${MODEL_RUNNER_LLM_CHAT}
+    model: ${MODEL_RUNNER_LLM_CHAT:-ai/gemma3:4b-q4_K_M}

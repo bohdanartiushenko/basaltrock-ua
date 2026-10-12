@@ -11,12 +11,13 @@ BASALTROCK ?= .basaltrock/$(BASALTROCK_VERSION)
 DOCKER_DIR = $(BASALTROCK)/src/main/resources/opensearch/docker
 DATA_FOLDER ?= data
 DOC_ANSI_CODEPAGE ?= cp1251
-MODEL_RUNNER_LLM_CHAT ?= ai/gemma4:e2b-q4_K_M
+MODEL_RUNNER_LLM_CHAT ?= ai/gemma3:4b-q4_K_M
 MODEL_RUNNER_LLM_EMBEDDING ?= ai/nomic-embed-text-v2-moe
 MODEL_KEEP_ALIVE ?= -1
 MODEL_CONTEXT_SIZE ?= 32768
+SYSTEM_PROMPT_FILE ?= system-prompt.ua.txt
 
-COMPOSE = docker compose -f $(DOCKER_DIR)/docker-compose.yml -f docker-compose.ua.yml
+COMPOSE = RAG_SYSTEM_PROMPT_TEMPLATE="$$(cat $(SYSTEM_PROMPT_FILE))" docker compose -f $(DOCKER_DIR)/docker-compose.yml -f docker-compose.ua.yml
 
 export DATA_FOLDER_PATH = $(abspath $(DATA_FOLDER))
 export INDEX_HTML_PATH = $(abspath index.ua.html)

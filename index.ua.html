@@ -15,7 +15,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -28,44 +28,92 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             max-width: 800px;
             width: 100%;
-            padding: 40px;
+            height: 100%;
+            padding: 24px 32px;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         h1 {
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 28px;
-            margin-bottom: 8px;
+            font-size: 24px;
             color: #1a202c;
+            flex: 1;
+        }
+
+        .icon-btn {
+            background: none;
+            border: 1px solid #e2e8f0;
+            color: #4a5568;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            width: auto;
+            font-weight: 500;
+        }
+
+        .icon-btn:hover {
+            background: #f7fafc;
         }
 
         .subtitle {
             color: #718096;
-            margin-bottom: 32px;
-            font-size: 14px;
+            margin: 6px 0 16px;
+            font-size: 13px;
         }
 
-        .input-group {
-            margin-bottom: 20px;
+        details.settings {
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            flex: none;
+        }
+
+        details.settings > summary {
+            cursor: pointer;
+            padding: 10px 14px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .settings-body {
+            padding: 0 14px 14px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .settings-body .wide {
+            grid-column: 1 / -1;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 500;
             color: #2d3748;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         input[type="text"],
         input[type="number"],
         textarea {
             width: 100%;
-            padding: 12px 16px;
+            padding: 10px 14px;
             border: 2px solid #e2e8f0;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 15px;
             transition: border-color 0.2s;
             font-family: inherit;
         }
@@ -82,123 +130,136 @@
             min-height: 80px;
         }
 
-        input[type="number"] {
-            width: 120px;
+        #chat {
+            flex: 1;
+            overflow-y: auto;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 4px 4px 16px;
         }
 
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 14px 32px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            width: 100%;
+        .empty {
+            margin: auto;
+            color: #a0aec0;
+            font-size: 14px;
+            text-align: center;
         }
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .results {
-            margin-top: 32px;
-            display: none;
-        }
-
-        .results.visible {
-            display: block;
-        }
-
-        .answer {
-            background: #f7fafc;
-            border-left: 4px solid #667eea;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 24px;
-        }
-
-        .answer h3 {
-            font-size: 16px;
-            margin-bottom: 12px;
-            color: #2d3748;
-        }
-
-        .answer-text {
-            color: #1a202c;
+        .msg {
+            max-width: 85%;
             line-height: 1.6;
             font-size: 15px;
             white-space: pre-wrap;
+            padding: 12px 16px;
+            border-radius: 12px;
         }
 
-        .sources {
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 20px;
+        .msg.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
         }
 
-        .sources h3 {
-            font-size: 16px;
-            margin-bottom: 16px;
-            color: #2d3748;
+        .msg.assistant {
+            align-self: flex-start;
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            color: #1a202c;
+            border-bottom-left-radius: 4px;
+        }
+
+        .msg.error {
+            align-self: flex-start;
+            background: #fff5f5;
+            border-left: 4px solid #fc8181;
+            color: #c53030;
+        }
+
+        .msg .pending {
+            color: #718096;
+        }
+
+        details.sources {
+            margin-top: 10px;
+            font-size: 13px;
+            white-space: normal;
+        }
+
+        details.sources > summary {
+            cursor: pointer;
+            color: #4a5568;
+            font-weight: 500;
         }
 
         .source-item {
-            background: #f7fafc;
-            padding: 12px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            padding: 10px;
             border-radius: 6px;
-            margin-bottom: 12px;
+            margin-top: 10px;
             border-left: 3px solid #cbd5e0;
-        }
-
-        .source-item:last-child {
-            margin-bottom: 0;
         }
 
         .source-meta {
             font-size: 12px;
             color: #718096;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            word-break: break-all;
         }
 
         .source-text {
-            font-size: 14px;
+            font-size: 13px;
             color: #2d3748;
             line-height: 1.5;
         }
 
-        .error {
-            background: #fff5f5;
-            border-left: 4px solid #fc8181;
-            padding: 16px;
+        form.composer {
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 16px;
+        }
+
+        form.composer input[type="text"] {
+            flex: 1;
+        }
+
+        form.composer button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0 24px;
             border-radius: 8px;
-            color: #c53030;
-            margin-top: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
+        }
+
+        form.composer button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        form.composer button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .loading {
             display: inline-block;
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             border: 2px solid #ffffff;
             border-radius: 50%;
             border-top-color: transparent;
             animation: spin 0.6s linear infinite;
-            margin-right: 8px;
+            vertical-align: -2px;
         }
 
         @keyframes spin {
@@ -210,7 +271,8 @@
 </head>
 <body>
 <div class="container">
-    <h1><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="36" height="36" class="logo">
+    <header>
+        <h1><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="32" height="32" class="logo">
   <!-- Cube - top face -->
   <polygon points="64,20 108,42 64,64 20,42" fill="#636e72"/>
   <!-- Cube - right face -->
@@ -226,110 +288,140 @@
   <!-- Brain center line -->
   <path d="M64,52 C64,62 64,75 64,101" fill="none" stroke="#ffd700" stroke-width="2.5"/>
 </svg>База знань</h1>
+        <button class="icon-btn" id="clearBtn" type="button">Нова розмова</button>
+    </header>
     <p class="subtitle">Запитуйте про свої документи звичайною мовою</p>
 
-    <form id="searchForm">
-        <div class="input-group">
-            <label for="question">Питання</label>
-            <input
-                    autofocus
-                    id="question"
-                    name="question"
-                    placeholder="Що вас цікавить?"
-                    required
-                    type="text"
-            >
+    <details class="settings">
+        <summary>Налаштування</summary>
+        <div class="settings-body">
+            <div>
+                <label for="limit">Кількість джерел (1-30)</label>
+                <input id="limit" max="30" min="1" name="limit" type="number" value="5">
+            </div>
+            <div>
+                <label for="temperature">Температура</label>
+                <input id="temperature" min="0.0" name="temperature" step="0.1" type="number" value="{{ temperature }}">
+            </div>
+            <div>
+                <label for="maxtokens">Максимальна довжина відповіді</label>
+                <input id="maxtokens" max="1000000" min="1000" name="maxtokens" type="number" value="{{ max_tokens }}">
+            </div>
+            <div>
+                <label for="historyTurns">Пам'ять (кількість пар реплік)</label>
+                <input id="historyTurns" max="20" min="0" name="historyTurns" type="number" value="5">
+            </div>
+            <div class="wide">
+                <label for="systemPrompt">Системна інструкція (залиште {context})</label>
+                <textarea id="systemPrompt" name="systemPrompt">{{ system_prompt }}</textarea>
+            </div>
         </div>
+    </details>
 
-        <div class="input-group">
-            <label for="limit">Кількість джерел (1-30)</label>
-            <input
-                    id="limit"
-                    max="30"
-                    min="1"
-                    name="limit"
-                    type="number"
-                    value="5"
-            >
-        </div>
-
-        <div class="input-group">
-            <label for="temperature">Температура (творчість відповіді)</label>
-            <input
-                    id="temperature"
-                    min="0.0"
-                    name="temperature"
-                    step="0.1"
-                    type="number"
-                    value="{{ temperature }}"
-            >
-        </div>
-
-        <div class="input-group">
-            <label for="maxtokens">Максимальна довжина відповіді</label>
-            <input
-                    id="maxtokens"
-                    max="1000000"
-                    min="1000"
-                    name="maxtokens"
-                    type="number"
-                    value="{{ max_tokens }}"
-            >
-        </div>
-
-        <div class="input-group">
-            <label for="systemPrompt">Системна інструкція (залиште {context})</label>
-            <textarea
-                    id="systemPrompt"
-                    name="systemPrompt"
-            >{{ system_prompt }}</textarea>
-        </div>
-
-        <button id="submitBtn" type="submit">
-            Запитати
-        </button>
-    </form>
-
-    <div class="results" id="results">
-        <div class="answer">
-            <h3>Відповідь</h3>
-            <div class="answer-text" id="answer"></div>
-        </div>
-
-        <div class="sources">
-            <h3>Джерела</h3>
-            <div id="sources"></div>
-        </div>
+    <div id="chat">
+        <div class="empty" id="empty">Поставте перше питання</div>
     </div>
 
-    <div class="error" id="error" style="display: none;"></div>
+    <form class="composer" id="searchForm">
+        <input autofocus id="question" name="question" placeholder="Що вас цікавить?" required type="text">
+        <button id="submitBtn" type="submit">Запитати</button>
+    </form>
 </div>
 
 <script>
     const form = document.getElementById('searchForm');
     const submitBtn = document.getElementById('submitBtn');
-    const resultsDiv = document.getElementById('results');
-    const answerDiv = document.getElementById('answer');
-    const sourcesDiv = document.getElementById('sources');
-    const errorDiv = document.getElementById('error');
+    const questionInput = document.getElementById('question');
+    const chatDiv = document.getElementById('chat');
+    const emptyDiv = document.getElementById('empty');
+    const clearBtn = document.getElementById('clearBtn');
+
+    const history = [];
+
+    clearBtn.addEventListener('click', () => {
+        history.length = 0;
+        chatDiv.innerHTML = '';
+        chatDiv.appendChild(emptyDiv);
+        questionInput.focus();
+    });
+
+    function addMessage(role, text) {
+        emptyDiv.remove();
+        const el = document.createElement('div');
+        el.className = `msg ${role}`;
+        el.textContent = text;
+        chatDiv.appendChild(el);
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+        return el;
+    }
+
+    function renderSources(el, citations) {
+        const refs = [];
+        (citations || []).forEach((citation) => {
+            (citation.retrievedReferences || []).forEach((ref) => refs.push(ref));
+        });
+        if (refs.length === 0) return;
+
+        const details = document.createElement('details');
+        details.className = 'sources';
+        const summary = document.createElement('summary');
+        summary.textContent = `Джерела (${refs.length})`;
+        details.appendChild(summary);
+
+        refs.forEach((ref) => {
+            const item = document.createElement('div');
+            item.className = 'source-item';
+            const score = ref.score ? ` | Релевантність: ${(ref.score * 100).toFixed(1)}%` : '';
+            const uri = ref.location?.s3Location?.uri || 'документ';
+            item.innerHTML = `
+                <div class="source-meta"><strong>${escapeHtml(uri)}</strong>${score}</div>
+                <div class="source-text">${escapeHtml(ref.content?.text || '')}</div>
+            `;
+            details.appendChild(item);
+        });
+
+        el.appendChild(details);
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+
+    function buildQuery(question) {
+        const turns = parseInt(document.getElementById('historyTurns').value) || 0;
+        if (turns === 0 || history.length === 0) return question;
+
+        const recent = history.slice(-turns * 2);
+        const transcript = recent
+            .map((m) => `${m.role === 'user' ? 'Користувач' : 'Асистент'}: ${m.text}`)
+            .join('\n');
+        return `<history>\n${transcript}\n</history>\n\n<question>\n${question}\n</question>`;
+    }
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const question = document.getElementById('question').value;
+        const question = questionInput.value.trim();
+        if (!question) return;
+
         const limit = document.getElementById('limit').value;
         const temperature = document.getElementById('temperature').value;
         const systemPrompt = document.getElementById('systemPrompt').value;
         const maxtokens = document.getElementById('maxtokens').value;
 
-        resultsDiv.classList.remove('visible');
-        errorDiv.style.display = 'none';
+        const query = buildQuery(question);
+
+        addMessage('user', question);
+        questionInput.value = '';
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span class="loading"></span>Думаю...';
+        submitBtn.innerHTML = '<span class="loading"></span>';
+
+        const answerEl = addMessage('assistant', '');
+        const pending = document.createElement('span');
+        pending.className = 'pending';
+        pending.textContent = 'Думаю...';
+        answerEl.appendChild(pending);
 
         try {
             const body = {
-                input: {text: question},
+                input: {text: query},
                 retrieveAndGenerateConfiguration: {
                     type: "KNOWLEDGE_BASE",
                     knowledgeBaseConfiguration: {
@@ -366,38 +458,21 @@
             }
 
             const data = await response.json();
+            const answer = data.output?.text || 'Відповідь не сформовано';
 
-            answerDiv.textContent = data.output?.text || 'Відповідь не сформовано';
+            answerEl.textContent = answer;
+            renderSources(answerEl, data.citations);
 
-            sourcesDiv.innerHTML = '';
-            const citations = data.citations || [];
-            if (citations.length > 0) {
-                citations.forEach((citation) => {
-                    const ref = citation.retrievedReferences?.[0];
-                    if (!ref) return;
-                    const sourceEl = document.createElement('div');
-                    sourceEl.className = 'source-item';
-                    const score = ref.score ? ` | Релевантність: ${(ref.score * 100).toFixed(1)}%` : '';
-                    sourceEl.innerHTML = `
-                            <div class="source-meta">
-                                <strong>${ref.location.s3Location.uri}</strong>${score}
-                            </div>
-                            <div class="source-text">${escapeHtml(ref.content.text)}</div>
-                        `;
-                    sourcesDiv.appendChild(sourceEl);
-                });
-            } else {
-                sourcesDiv.innerHTML = '<p style="color: #718096;">Джерел не знайдено</p>';
-            }
-
-            resultsDiv.classList.add('visible');
+            history.push({role: 'user', text: question});
+            history.push({role: 'assistant', text: answer});
 
         } catch (error) {
-            errorDiv.textContent = `Помилка: ${error.message}`;
-            errorDiv.style.display = 'block';
+            answerEl.remove();
+            addMessage('error', `Помилка: ${error.message}`);
         } finally {
             submitBtn.disabled = false;
             submitBtn.textContent = 'Запитати';
+            questionInput.focus();
         }
     });
 
