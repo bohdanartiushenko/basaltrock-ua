@@ -392,7 +392,7 @@
         const transcript = recent
             .map((m) => `${m.role === 'user' ? 'Користувач' : 'Асистент'}: ${m.text}`)
             .join('\n');
-        return `<history>\n${transcript}\n</history>\n\n<question>\n${question}\n</question>`;
+        return `<question>\n${question}\n</question>\n\n<history>\n${transcript}\n</history>`;
     }
 
     form.addEventListener('submit', async (e) => {
