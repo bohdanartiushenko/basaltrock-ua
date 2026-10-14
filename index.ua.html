@@ -355,12 +355,8 @@
         return el;
     }
 
-    function renderSources(el, citations) {
-        const refs = [];
-        (citations || []).forEach((citation) => {
-            (citation.retrievedReferences || []).forEach((ref) => refs.push(ref));
-        });
-        if (refs.length === 0) return;
+    function renderSources(el, refs) {
+        if (!refs || refs.length === 0) return;
 
         const details = document.createElement('details');
         details.className = 'sources';
@@ -384,15 +380,10 @@
         chatDiv.scrollTop = chatDiv.scrollHeight;
     }
 
-    function buildQuery(question) {
+    function recentHistory() {
         const turns = parseInt(document.getElementById('historyTurns').value) || 0;
-        if (turns === 0 || history.length === 0) return question;
-
-        const recent = history.slice(-turns * 2);
-        const transcript = recent
-            .map((m) => `${m.role === 'user' ? 'Користувач' : 'Асистент'}: ${m.text}`)
-            .join('\n');
-        return `<question>\n${question}\n</question>\n\n<history>\n${transcript}\n</history>`;
+        if (turns === 0) return [];
+        return history.slice(-turns * 2);
     }
 
     form.addEventListener('submit', async (e) => {
@@ -406,8 +397,6 @@
         const systemPrompt = document.getElementById('systemPrompt').value;
         const maxtokens = document.getElementById('maxtokens').value;
 
-        const query = buildQuery(question);
-
         addMessage('user', question);
         questionInput.value = '';
         submitBtn.disabled = true;
@@ -420,48 +409,52 @@
         answerEl.appendChild(pending);
 
         try {
-            const body = {
-                input: {text: query},
-                retrieveAndGenerateConfiguration: {
-                    type: "KNOWLEDGE_BASE",
-                    knowledgeBaseConfiguration: {
-                        knowledgeBaseId: "{{ kb_id }}",
-                        modelArn: "{{ model_id }}",
-                        retrievalConfiguration: {
-                            vectorSearchConfiguration: {
-                                numberOfResults: parseInt(limit)
-                            }
-                        },
-                        generationConfiguration: {
-                            inferenceConfig: {
-                                textInferenceConfig: {
-                                    temperature: parseFloat(temperature),
-                                    maxTokens: parseInt(maxtokens)
-                                }
-                            },
-                            promptTemplate: {
-                                textPromptTemplate: systemPrompt
-                            }
-                        }
-                    }
-                }
-            };
-
-            const response = await fetch('/retrieveAndGenerate', {
+            const retrieveResp = await fetch('/knowledgebases/{{ kb_id }}/retrieve', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(body)
+                body: JSON.stringify({
+                    retrievalQuery: {text: question},
+                    retrievalConfiguration: {
+                        vectorSearchConfiguration: {numberOfResults: parseInt(limit)}
+                    }
+                })
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            if (!retrieveResp.ok) {
+                throw new Error(`HTTP ${retrieveResp.status}: ${retrieveResp.statusText}`);
             }
 
-            const data = await response.json();
-            const answer = data.output?.text || 'Відповідь не сформовано';
+            const results = (await retrieveResp.json()).retrievalResults || [];
+            const context = results.map((r) => r.content?.text || '').join('\n\n');
+
+            const messages = recentHistory().map((m) => ({
+                role: m.role,
+                content: [{text: m.text}]
+            }));
+            messages.push({role: 'user', content: [{text: question}]});
+
+            const converseResp = await fetch(`/model/${encodeURIComponent('{{ model_id }}')}/converse`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    system: [{text: systemPrompt.replace('{context}', context)}],
+                    messages: messages,
+                    inferenceConfig: {
+                        temperature: parseFloat(temperature),
+                        maxTokens: parseInt(maxtokens)
+                    }
+                })
+            });
+
+            if (!converseResp.ok) {
+                throw new Error(`HTTP ${converseResp.status}: ${converseResp.statusText}`);
+            }
+
+            const data = await converseResp.json();
+            const answer = data.output?.message?.content?.[0]?.text || 'Відповідь не сформовано';
 
             answerEl.textContent = answer;
-            renderSources(answerEl, data.citations);
+            renderSources(answerEl, results);
 
             history.push({role: 'user', text: question});
             history.push({role: 'assistant', text: answer});
