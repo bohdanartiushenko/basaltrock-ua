@@ -11,7 +11,7 @@ INDEX_HTML = index.ua.html
 DOC_ANSI_CODEPAGE ?= cp1251
 
 PRIVATE_CLOUD_GH ?= bohdanartiushenko/basaltrock-private-cloud
-PRIVATE_CLOUD_VERSION ?= $(shell curl -fsSL https://api.github.com/repos/$(PRIVATE_CLOUD_GH)/releases/latest | sed -n 's/.*"tag_name": *"\([^"]*\)".*/\1/p')
+PRIVATE_CLOUD_VERSION ?= $(shell curl -fsSL https://api.github.com/repos/$(PRIVATE_CLOUD_GH)/tags | sed -n 's/.*"name": *"\([^"]*\)".*/\1/p' | head -1)
 PRIVATE_CLOUD_DIR ?= .private-cloud/$(PRIVATE_CLOUD_VERSION)
 
 $(PRIVATE_CLOUD_DIR)/Makefile:
