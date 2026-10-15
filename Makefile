@@ -10,6 +10,9 @@ SYSTEM_PROMPT_FILE = system-prompt.ua.txt
 INDEX_HTML = index.ua.html
 DOC_ANSI_CODEPAGE ?= cp1251
 
+S3_EXTRA_BUCKETS = basaltrock-ua
+SEED_SRC_basaltrock-ua = .
+
 PRIVATE_CLOUD_GH ?= bohdanartiushenko/basaltrock-private-cloud
 PRIVATE_CLOUD_VERSION ?= $(shell curl -fsSL https://api.github.com/repos/$(PRIVATE_CLOUD_GH)/tags | sed -n 's/.*"name": *"\([^"]*\)".*/\1/p' | head -1)
 PRIVATE_CLOUD_DIR ?= .private-cloud/$(PRIVATE_CLOUD_VERSION)
