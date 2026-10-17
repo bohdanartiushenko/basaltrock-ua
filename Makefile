@@ -16,6 +16,7 @@ SEED_SRC_basaltrock-ua = .
 PRIVATE_CLOUD_GH ?= bohdanartiushenko/basaltrock-private-cloud
 PRIVATE_CLOUD_VERSION ?= $(shell curl -fsSL https://api.github.com/repos/$(PRIVATE_CLOUD_GH)/tags | sed -n 's/.*"name": *"\([^"]*\)".*/\1/p' | head -1)
 PRIVATE_CLOUD_DIR ?= .private-cloud/$(PRIVATE_CLOUD_VERSION)
+export PRIVATE_CLOUD_VERSION
 
 $(PRIVATE_CLOUD_DIR)/Makefile:
 	@echo "Downloading basaltrock-private-cloud $(PRIVATE_CLOUD_VERSION) from github.com/$(PRIVATE_CLOUD_GH)"
