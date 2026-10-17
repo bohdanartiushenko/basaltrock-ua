@@ -17,6 +17,10 @@
 інтерфейс, системна інструкція та кодування `cp1251` для старих `.doc`. Усю
 механіку стека тримає той репозиторій і підтягується автоматично.
 
+## Архітектура
+
+![Архітектура](https://raw.githubusercontent.com/bohdanartiushenko/basaltrock-private-cloud/main/docs/private-cloud.png)
+
 ## Що потрібно
 
 [Docker Desktop](https://www.docker.com/products/docker-desktop/) — встановити й запустити.
